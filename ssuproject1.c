@@ -1,8 +1,13 @@
 //입력하면 숫자로 안 나오고 문자로 나와....
 //일단 참고로 올립니당 더하기만
 #include<stdio.h>
+#incldue<string.h>
 
-int main(void)
+void plus(char);
+int main(void){
+}
+}
+void plus(char)
 {
 	char num1[100]={0},num2[100]={0},ans[100]={0};
 	int input,i,j,leng1,leng2,leng,tmp1,tmp2,tmp3;
