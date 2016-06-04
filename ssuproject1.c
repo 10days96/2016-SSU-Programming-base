@@ -1,6 +1,6 @@
-//일단 참고로 올립니당 더하기만
 #include<stdio.h>
 #include<string.h>
+#include<stlib.h>
 
 void comma(char);
 void plus(char);
