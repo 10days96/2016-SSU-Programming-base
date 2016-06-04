@@ -2,6 +2,7 @@
 #include<stdio.h>
 #incldue<string.h>
 
+void comma(char);
 void plus(char);
 int main(void){
 }
@@ -63,3 +64,17 @@ void plus(char)
 
 	return 0;
 }
+
+void comma(char)
+{
+	int i;
+
+	for(i=0; tmp[i]!='\0'; i++){//tmp는 입력의 임시로 나타낸 거
+		printf("%c",str[i]);
+	 	if((i%3==0)&&(tmp[i+1]!='\0'))
+			printf(",");
+	}
+
+	return 0;
+}
+
