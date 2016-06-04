@@ -1,4 +1,3 @@
-//입력하면 숫자로 안 나오고 문자로 나와....
 //일단 참고로 올립니당 더하기만
 #include<stdio.h>
 #incldue<string.h>
