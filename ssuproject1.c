@@ -5,6 +5,7 @@
 void comma(char);
 void plus(char);
 int main(void){
+	int i;
 }
 }
 void plus(char)
