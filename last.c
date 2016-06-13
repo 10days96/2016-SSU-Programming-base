@@ -165,3 +165,170 @@ enum
                  for (i = 0; i < iNumOfVAR; ++i) {
 
                      printf("%c = ", cVarName[i]);
+
+                   }
+  
+               }
+               else{
+  
+                   printf("정의된 변수 없음\n");
+  
+               }
+ 
+          }
+          // 저장된 모든 변수를 파일에 저장
+          else if (0 == strcmp(cInput, "save")){
+ 
+              pFile = fopen("save.txt", "w");
+ 
+              for (i = 0; i < iNumOfVAR; ++i) {
+ 
+                  fprintf(pFile, "%c = %s\n", cVarName[i], cVarValue[i]);
+ 
+              }
+ 
+              fclose(pFile);
+ 
+          }
+          // 파일에 저장된 변수를 변수를 저장하는 배열 공간에 불러옴
+          else if (0 == strcmp(cInput, "load")){
+ 
+              pFile = fopen("save.txt", "r");
+ 
+              while (fscanf(pFile, "%c = %s\n", &cVarName[iNumOfVAR], cVarValue[iNumOfVAR]) != EOF){
+ 
+                  iNumOfVAR++;
+ 
+              }
+ 
+              fclose(pFile);
+ 
+          }
+          // 프로그램 종료
+          else if (0 == strcmp(cInput, "end")){
+ 
+              return 0;
+ 
+          }
+          else{
+ 
+              // 변수 저장 여부 확인
+              for (i = 0; i < strlen(cInput); i++)
+              {
+                  if ('=' == cInput[i])       // 입력 받은 문자열에 = 이 있다는 의미는 곧 변수를 저장하겠다는 것으로 봐도 무방
+                  {
+                      bHasEqual = true;
+                               break;
+                  }
+              }
+ 
+              // 변수 검색 후 출력
+              if ((('a' <= cInput[0] && cInput[0] <= 'z') || ('A' <= cInput[0] && cInput[0] <= 'Z')) && 1 == strlen(cInput)){
+ 
+                  for (i = 0; i < 10; i++)
+                  {
+ 
+                      // 알파벳의 대소문자를 구별하지 않으므로 소문자일때는 대문자를 대문자일때는 소문자를 한번 더 확인 해주어야 한다.
+                      if (cInput[0] == cVarName[i] || ('a' <= cInput[0] && cInput[0] - 32 == cVarName[i]) || ('Z' >= cInput[0] && cInput[0] + 32 == cVarName[i])){
+ 
+                          bHasVAR = true;
+                          break;
+ 
+                      }
+                  }
+ 
+                  printf("= ");
+ 
+                  if (bHasVAR)    // 변수를 찾았다면
+                  {
+                      PrintNumber(cVarValue[i]);  // 변수 출력
+                  }
+                  else{
+ 
+                      printf("undefined.\n");
+ 
+                  }
+ 
+              }
+              else{
+ 
+ 
+                  // 문자열에 입력된 피연산자와 연산자를 각각 다른 배열에 나눈다.
+                  for (i = 0; i < strlen(cInput); i++){
+ 
+                      if (('0' <= cInput[i] && cInput[i] <= '9') || ('.' == cInput[i])) {
+ 
+                          if (bIsStart) {
+ 
+                              iStrInx = i;
+                              iEndInx = iStrInx;
+                              bIsStart = false;
+ 
+                         }
+
+                         ++iEndInx;
+         
+                         // 다음 칸이 숫자도 아니고 .도 아니라면 하나의 숫자가 끝났다는 것을 의미
+                         if (!('0' <= cInput[i + 1] && cInput[i + 1] <= '9') && ('.' != cInput[i + 1]))
+                         {
+
+                             if (iIsNegative)
+                             {
+                                 cInputOperand[iNumOperand][0] = '-';
+                             }
+                             // 지금 까지 지나온 숫자 한자리 한자리를 피연산자 관리 배열에 저장
+                             for (j = 0; j < iEndInx - iStrInx; ++j) {
+
+                                 cInputOperand[iNumOperand][j + iIsNegative] = cInput[iStrInx + j];
+
+                             }
+
+                             iIsNegative = 0;
+                             bIsStart = true;
+                             ++iNumOperand;
+
+                         }
+
+                     }// 연산자 일경우
+                     else if ('+' == cInput[i] || '-' == cInput[i] || '*' == cInput[i] || '/' == cInput[i] || '%' == cInput[i]){
+
+                         // 단항 연산자 - 라면, 연산자 배열에 저장하지 않음
+                         if ('-' == cInput[i] && (('0' <= cInput[i + 1] && cInput[i + 1] <= '9')) || ('a' <= cInput[i + 1] && cInput[i + 1] <= 'z') || ('A' <= cInput[i +     1] && cInput[i + 1] <= 'Z'))
+                         {
+
+                             iIsNegative = 1;
+
+                         }
+                         else{// 이항 연산자라면, 연산자 배열에 저장
+
+                             cInputOperator[iNumOperator++] = cInput[i];
+
+                         }
+
+                     }// 변수가 수식에 있을 경우
+                     else if ((('a' <= cInput[i] && cInput[i] <= 'z') || ('A' <= cInput[i] && cInput[i] <= 'Z')))
+                     {
+
+                         if ('=' == cInput[i + 1] || '=' == cInput[i + 2]){
+
+                             continue;
+
+                         }
+                         for (j = 0; j < 10; j++)
+                         {
+                             // 대소구분을 안하므로 2중 확인
+                             if (cInput[i] == cVarName[j] || ('a' <= cInput[i] && cInput[i] - 32 == cVarName[j]) || ('Z' >= cInput[i] && cInput[i] + 32 == cVarName[j])){
+
+                                 bHasVAR = true;
+                                 break;
+
+                             }
+                         }
+
+                         // 입력된 변수가 배열에 존재 한다면, 그 값을 피연산자 배열에 복사해서 붙여 넣음
+                         if (bHasVAR)
+                         {
+                             strcpy(cInputOperand[iNumOperand], cVarValue[j]);
+                             iNumOperand++;
+                         }
+                         else{// 변수가 없다면 undefined 출력
