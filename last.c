@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<stdboll.h>
+#include<stdbool.h>
 #include<stdlib.h>
 #include<string.h>
 
@@ -150,7 +150,7 @@ enum
          get_string(cInput);         // Enter가 눌릴 때까지 공백을 포>    함한 입력스트림의 모든 문자를 배열에 저장합니다.
 
          // 입력 받은 문자열을 strcmp로 비교. 각, 명령어에 대한 실행을
-     해줍니다.
+         // 해줍니다.
          // 화면 지우기
          if (0 == strcmp(cInput, "clear")) {
 
