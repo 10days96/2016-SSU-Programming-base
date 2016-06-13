@@ -499,5 +499,173 @@ enum
      {
 
          for (i = strlen(cBuffer) - 1; i != iStart; i--)
+        {
+            cBuffer[i] = cBuffer[i - 1];
+        }
 
+        cBuffer[iStart++] = '-';
+
+    }
+
+    if (!iDecimal)
+    {
+
+        for (i = strlen(cBuffer) - 1; i != iStart; i--)
+        {
+            cBuffer[i] = cBuffer[i - 1];
+        }
+
+        cBuffer[iStart++] = '0';
+
+        for (i = strlen(cBuffer) - 1; i != iStart; i--)
+        {
+            cBuffer[i] = cBuffer[i - 1];
+        }
+
+        cBuffer[iStart++] = '.';
+
+    }
+    else{
+
+        for (i = strlen(cBuffer) - 1; i != iDecimal + iStart; i--)
+        {
+
+
+            cBuffer[i] = cBuffer[i - 1];
+        }
+
+        cBuffer[iDecimal + iStart] = '.';
+
+    }
+
+
+    strcpy(cNumber, cBuffer);
+
+    return ERRCODE_OK;
+
+}
+
+int PrintNumber(char cNumber[])
+{
+    bool bHasPoint;
+    int i;
+    int iHasMinus;
+    int iDecimalCnt;
+    int iPointLocation;
+
+    bHasPoint = false;
+    iHasMinus = 0;
+    iDecimalCnt = 0;
+    iPointLocation = 0;
+
+
+    if ('-' == cNumber[0]){
+
+        iHasMinus = 1;
+
+    }
+
+    for (i = 0; i < strlen(cNumber); i++)
+    {
+
+        if ('.' == cNumber[i]){
+
+            iPointLocation = i % 3;
+            break;
+
+        }
+
+    }
+
+    for (i = 0; i < strlen(cNumber); i++)
+    {
+
+        if ('.' == cNumber[i]){
+
+            bHasPoint = true;
+
+        }
+
+        if (i != 0 + iHasMinus && iPointLocation == i % 3 && !bHasPoint)
+        {
+
+            printf(",");
+            
+        }
+
+        printf("%c", cNumber[i]);
+
+
+
+        if (bHasPoint){
+
+            iDecimalCnt++;
+
+        }
+
+        if (iDecimalCnt > 9)
+        {
+
+            break;
+
+        }
+
+    }
+
+    printf("\n");
+
+    return ERRCODE_OK;
+
+}
+
+
+void PrintErrorMsg(const int iErrCode)
+{
+    printf("error : ");
+    switch (iErrCode) {
+
+    case ERRCODE_UNKNOWN_CHAR:
+
+        printf("숫자나 연산자 외의 문자가 입력 되었습니다.\n");
+
+        break;
+
+    case ERRCODE_INTEGER_OVERFLOW:
+
+        printf("정수 부분이 너무 큽니다.\n");
+
+        break;
+
+    case ERRCODE_DECIMAL_OVERFLOW:
+
+        printf("소수 부분이 너무 큽니다.\n");
+
+        break;
+
+    case ERRCODE_OPERATOR_OPERAND:
+
+        printf("피연산자와 연산자의 개수가 정확하지 않습니다.\n");
+
+        break;
+
+    default:
+   printf("정의 되지 않은 오류입니다.\n");
+
+         break;
+
+     }
+ }
+
+ void get_string(char string[])
+ {
+     char c;
+     while(1) {
+         c = getchar();
+         if(c == '\n') {
+             string[strlen(string)] = '\0';
+             return ;
+         }
+         string[strlen(string)] = c;
+     }
+ }
 
