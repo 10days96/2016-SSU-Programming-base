@@ -332,3 +332,172 @@ enum
                              iNumOperand++;
                          }
                          else{// 변수가 없다면 undefined 출력
+                             printf("undefined.\n");
+
+                         }
+
+                     }
+                     else if (' ' == cInput[i] || '=' == cInput[i]){// 공백 무시
+
+                         continue;
+
+                     }
+                     else{// 이외의 문자가 입력시 에러 코드 출력
+
+                         PrintErrorMsg(ERRCODE_UNKNOWN_CHAR);
+                         bIsError = true;
+
+                     }
+
+                 }
+
+                 if (iNumOperator + 1 != iNumOperand && !bIsError){// 모든 입력을 받은 후에 연산자와 피연산자의 개수 차이가 1인지 확인하여 올바른 >    수식여부를 체크함
+
+                     PrintErrorMsg(ERRCODE_OPERATOR_OPERAND);
+                     bIsError = true;
+
+                 }
+
+                 // 연산
+                 if (!bIsError)
+                 {
+
+                     while (iNumOperator)
+                     {
+
+                         cOperator = '\0';
+
+                         for (i = 0; i < iNumOperator; i++) // 연산자 우선순위에 따라서 * , / , % 연산자 먼저 탐색함
+                         {
+
+                             if ('*' == cInputOperator[i] || '/' == cInputOperator[i] || '%' == cInputOperator[i])
+                             {
+                                 cOperator = cInputOperator[i];
+                                 iOperatorLocation = i;
+                                 break;
+                             }
+
+                         }
+
+                         if (cOperator == '\0') // 연산자 배열에 * , / , %  가 없다면
+                         {
+                             for (i = 0; i < iNumOperator; i++)
+                             {
+
+                                 if ('+' == cInputOperator[i] || '-' == cInputOperator[i])
+                                 {
+                                     cOperator = cInputOperator[i];
+                                     iOperatorLocation = i;
+                                     break;	
+                                 }
+
+                             }
+                         }
+
+                         // atof 함수를 이용해서 문자열을 double형으로 변환
+                         dOperandLeft = atof(cInputOperand[iOperatorLocation]);
+                         dOperandRight = atof(cInputOperand[iOperatorLocation + 1]);
+
+                         switch (cOperator)
+                         {
+                         case '+':
+                             dResult = dOperandLeft + dOperandRight;
+                             break;
+
+                         case '-':
+                             dResult = dOperandLeft - dOperandRight;
+                             break;
+
+                         case '*':
+                             dResult = dOperandLeft * dOperandRight;
+                             break;
+
+                         case '/':
+                             dResult = dOperandLeft / dOperandRight;
+                             break;
+
+                         case '%':
+ dResult = (int)dOperandLeft % (int)dOperandRight;
+                             break;
+
+                         default:
+                             break;
+                         }
+
+                         // 연산 후 연산결과를 다시 double 형에서 문자열 형으로 변환함
+                         DoubleToStr(cBuffer, dResult);
+                         strcpy(cInputOperand[iOperatorLocation], cBuffer);
+
+                         for (i = iOperatorLocation + 2; i < 10; i++)
+                         {
+
+                             strcpy(cInputOperand[i - 1], cInputOperand[i]);
+
+                         }
+
+                         for (i = iOperatorLocation + 1; i < 10; i++)
+                         {
+
+                             cInputOperator[i - 1] = cInputOperator[i];
+
+                         }
+
+                         --iNumOperand;
+                         --iNumOperator;
+
+                     }
+
+                     // 변수를 배열에 저장
+                     if (bHasEqual){
+
+                         j = 0;
+                         bIsStart = false;
+
+                         // 입력 받은 문자열에서 가장 첫번째 칸에는 변수명이 기입 되므로
+                         cVarName[iNumOfVAR] = cInput[0];
+
+                         strcpy(cVarValue[iNumOfVAR], cInputOperand[0]);
+
+                         printf("= ");
+                         PrintNumber(cVarValue[iNumOfVAR]);
+                         // 저장된 변수의 개수를 하나 증가 (하나의 변수를 입력 받았으므로...)
+                         iNumOfVAR++;
+
+                     }
+                     else{
+
+                         printf("= ");
+                         PrintNumber(cInputOperand[0]);
+
+                     }
+                 }
+
+             }
+
+
+         }
+
+     }
+
+     return 0;
+
+ }
+ int DoubleToStr(char cNumber[], double dNum)
+ {
+
+     int i;
+     int iDecimal, iSign;
+     int iStart;
+     char *cBuffer;
+
+     iStart = 0;
+
+    // https://msdn.microsoft.com/ko-kr/library/ehz2dset.aspx 참조
+     cBuffer = ecvt(dNum, 50 + 9 - 2, &iDecimal, &iSign);
+
+     if (iSign)
+     {
+
+         for (i = strlen(cBuffer) - 1; i != iStart; i--)
+
+
